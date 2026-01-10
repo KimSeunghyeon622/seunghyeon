@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { supabase } from './src/lib/supabase';
 
@@ -36,39 +36,7 @@ export default function App() {
   // 업주 상태
   const [storeScreen, setStoreScreen] = useState<StoreScreen>('dashboard');
 
-  useEffect(() => {
-    checkUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session) {
-        checkUserType(session.user.id);
-      } else {
-        setUserType(null);
-        setConsumerScreen('login');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const checkUser = async () => {
-    try {
-      setLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-
-      if (session) {
-        await checkUserType(session.user.id);
-      }
-    } catch (error) {
-      console.error('사용자 확인 오류:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const checkUserType = async (userId: string) => {
+  const checkUserType = useCallback(async (userId: string) => {
     try {
       // 소비자 체크
       const { data: consumer } = await supabase
@@ -103,7 +71,39 @@ export default function App() {
     } catch (error) {
       console.error('사용자 유형 확인 오류:', error);
     }
-  };
+  }, []);
+
+  const checkUser = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+
+      if (session) {
+        await checkUserType(session.user.id);
+      }
+    } catch (error) {
+      console.error('사용자 확인 오류:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [checkUserType]);
+
+  useEffect(() => {
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session) {
+        checkUserType(session.user.id);
+      } else {
+        setUserType(null);
+        setConsumerScreen('login');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [checkUser, checkUserType]);
 
   if (loading) {
     return (
