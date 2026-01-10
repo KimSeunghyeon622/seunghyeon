@@ -73,7 +73,7 @@ export default function StoreCashManagement({ onBack }: { onBack: () => void }) 
     try {
       // 실제로는 토스페이먼츠 결제를 먼저 진행해야 함
       // 여기서는 데모용으로 바로 충전
-      const { data, error } = await supabase.rpc('charge_store_cash', {
+      const { error } = await supabase.rpc('charge_store_cash', {
         p_store_id: storeId,
         p_amount: amount,
         p_description: '캐시 충전',

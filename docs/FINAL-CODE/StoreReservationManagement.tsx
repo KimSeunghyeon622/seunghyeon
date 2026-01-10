@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 
@@ -19,11 +19,7 @@ export default function StoreReservationManagement({ onBack }: { onBack: () => v
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'>('all');
 
-  useEffect(() => {
-    loadReservations();
-  }, [filter]);
-
-  const loadReservations = async () => {
+  const loadReservations = useCallback(async () => {
     try {
       setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
@@ -62,7 +58,11 @@ export default function StoreReservationManagement({ onBack }: { onBack: () => v
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    loadReservations();
+  }, [loadReservations]);
 
   const updateStatus = async (reservationId: string, newStatus: string) => {
     try {
