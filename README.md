@@ -157,11 +157,21 @@ npm start
 
 상세한 설계 문서는 `docs/` 디렉토리에서 확인할 수 있습니다:
 
-1. **[데이터베이스 스키마](docs/01-database-schema.md)**: 테이블 구조, 인덱스, 트리거
-2. **[시스템 아키텍처](docs/02-system-architecture.md)**: 전체 시스템 구성도, 폴더 구조
-3. **[API 설계](docs/03-api-design.md)**: 엔드포인트 명세, 요청/응답 형식
-4. **[개발 로드맵](docs/04-development-roadmap.md)**: MVP 및 단계별 개발 계획
-5. **[프로젝트 초기 설정 가이드](docs/05-setup-guide.md)**: 환경 설정부터 배포까지
+### 설계 문서
+1. **[초보자 가이드](docs/00-beginner-guide.md)**: 개발 시작을 위한 완벽 가이드
+2. **[데이터베이스 스키마](docs/01-database-schema.md)**: 테이블 구조, 인덱스, 트리거
+3. **[시스템 아키텍처](docs/02-system-architecture.md)**: 전체 시스템 구성도, 폴더 구조
+4. **[API 설계](docs/03-api-design.md)**: 엔드포인트 명세, 요청/응답 형식
+5. **[개발 로드맵](docs/04-development-roadmap.md)**: MVP 및 단계별 개발 계획
+6. **[프로젝트 초기 설정 가이드](docs/05-setup-guide.md)**: 환경 설정부터 배포까지
+
+### 구현 가이드
+7. **[리뷰 기능 통합 가이드](docs/06-review-integration-guide.md)**: App.tsx 리뷰 시스템 통합
+8. **[App.tsx 참조 코드](docs/app-tsx-reference.md)**: 완전한 App.tsx 예제 코드
+
+### 코드 예제
+- **[MyReservations.tsx](docs/code-examples/MyReservations.tsx)**: 예약 내역 화면
+- **[ReviewScreen.tsx](docs/code-examples/ReviewScreen.tsx)**: 리뷰 작성 화면
 
 ---
 
@@ -241,9 +251,9 @@ eas submit -p android
 ### ✅ MVP (Phase 1) - 8-10주
 
 - [x] 인증 시스템
-- [ ] 업체 탐색 (거리순/평점순)
-- [ ] 예약 시스템
-- [ ] 리뷰 시스템
+- [x] 업체 탐색 (거리순/평점순)
+- [x] 예약 시스템
+- [x] 리뷰 시스템
 - [ ] 상품 관리
 - [ ] 캐시 관리
 
