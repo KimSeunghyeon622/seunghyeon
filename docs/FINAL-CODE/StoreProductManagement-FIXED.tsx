@@ -121,7 +121,7 @@ export default function StoreProductManagement({ onBack }: { onBack: () => void 
     try {
       // FileSystem을 사용하여 base64로 읽기
       const base64 = await FileSystem.readAsStringAsync(productImage.uri, {
-        encoding: FileSystem.EncodingType.Base64,
+        encoding: 'base64',
       });
 
       const fileExt = productImage.uri.split('.').pop() || 'jpg';
