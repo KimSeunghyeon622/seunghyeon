@@ -44,7 +44,6 @@ export default function StoreListHome({
   const [stores, setStores] = useState<Store[]>([]);
   const [filteredStores, setFilteredStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // 필터 상태
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('전체');
@@ -96,17 +95,7 @@ export default function StoreListHome({
       result = result.filter((store) => store.average_rating >= selectedRating);
     }
 
-    // 3. 검색어 필터
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (store) =>
-          store.name.toLowerCase().includes(query) ||
-          store.address.toLowerCase().includes(query)
-      );
-    }
-
-    // 4. 정렬
+    // 3. 정렬
     if (sortType === 'recommended') {
       // 추천순: 리뷰수 많은 순
       result.sort((a, b) => b.review_count - a.review_count);
@@ -116,7 +105,7 @@ export default function StoreListHome({
     }
 
     setFilteredStores(result);
-  }, [stores, selectedCategory, selectedRating, searchQuery, sortType]);
+  }, [stores, selectedCategory, selectedRating, sortType]);
 
   // 준비중 여부 확인
   const isStoreClosed = (store: Store) => {
