@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
-  TextInput,
-  Modal,
 } from 'react-native';
 import { supabase } from '../lib/supabase';
 
