@@ -389,27 +389,26 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E0E0E0',
   },
   categoryContent: {
-    paddingHorizontal: 15,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    gap: 24,
   },
   categoryTab: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    marginRight: 8,
-    borderRadius: 16,
-    backgroundColor: '#F5F5F5',
+    paddingBottom: 2,
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent',
   },
   categoryTabActive: {
-    backgroundColor: '#00D563',
+    borderBottomColor: '#00D563',
   },
   categoryText: {
-    fontSize: 13,
-    color: '#666',
+    fontSize: 15,
+    color: '#999',
     fontWeight: '500',
   },
   categoryTextActive: {
-    color: '#FFF',
-    fontWeight: '600',
+    color: '#333',
+    fontWeight: '700',
   },
 
   // 필터 버튼
