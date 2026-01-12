@@ -25,6 +25,7 @@ export default function StoreRegularCustomers({ onBack }: StoreRegularCustomersP
       if (!user) return;
 
       const { data: store } = await supabase.from('stores').select('id').eq('user_id', user.id).single();
+      if (!store) return;
 
       const { data, error } = await supabase
         .from('favorites')
@@ -38,7 +39,7 @@ export default function StoreRegularCustomers({ onBack }: StoreRegularCustomersP
 
       // 제품 필터 목록 생성
       const products = new Set<string>();
-      data?.forEach((f) => {
+      data?.forEach((f: any) => {
         if (f.product_names && f.product_names.length > 0) {
           f.product_names.forEach((p: string) => products.add(p));
         }

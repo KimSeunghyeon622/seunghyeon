@@ -22,6 +22,7 @@ export default function MyReservationsFull({ onBack, onWriteReview }: MyReservat
       if (!user) return;
 
       const { data: consumer } = await supabase.from('consumers').select('id').eq('user_id', user.id).single();
+      if (!consumer) return;
 
       const { data, error } = await supabase
         .from('reservations')

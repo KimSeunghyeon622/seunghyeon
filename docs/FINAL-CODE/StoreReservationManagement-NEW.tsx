@@ -25,6 +25,7 @@ export default function StoreReservationManagementNew({ onBack }: StoreReservati
       if (!user) return;
 
       const { data: store } = await supabase.from('stores').select('id').eq('user_id', user.id).single();
+      if (!store) return;
 
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);

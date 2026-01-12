@@ -28,6 +28,7 @@ export default function StoreCashHistory({ onBack }: StoreCashHistoryProps) {
         .select('id')
         .eq('user_id', user.id)
         .single();
+      if (!store) return;
 
       const twoYearsAgo = new Date();
       twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);

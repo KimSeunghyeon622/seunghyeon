@@ -26,6 +26,7 @@ export default function StoreReviewManagement({ onBack }: StoreReviewManagementP
       if (!user) return;
 
       const { data: store } = await supabase.from('stores').select('id, average_rating, review_count').eq('user_id', user.id).single();
+      if (!store) return;
 
       const { data: reviewsData } = await supabase
         .from('reviews')
