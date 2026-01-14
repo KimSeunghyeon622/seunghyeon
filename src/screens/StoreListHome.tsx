@@ -385,13 +385,11 @@ const styles = StyleSheet.create({
   // 카테고리 탭
   categoryContainer: {
     backgroundColor: '#FFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
   },
   categoryContent: {
     paddingHorizontal: 20,
     paddingTop: 12,
-    paddingBottom: 12,
+    paddingBottom: 8,
     gap: 8,
   },
   categoryTab: {
@@ -420,9 +418,11 @@ const styles = StyleSheet.create({
   filterRow: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingTop: 12,
+    paddingTop: 0,
     paddingBottom: 12,
     backgroundColor: '#FFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
     gap: 10,
   },
   filterButton: {
