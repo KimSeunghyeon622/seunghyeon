@@ -390,11 +390,12 @@ const styles = StyleSheet.create({
   },
   categoryContent: {
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingTop: 10,
+    paddingBottom: 5,
     gap: 24,
   },
   categoryTab: {
-    paddingBottom: 8,
+    paddingBottom: 5,
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',
   },
@@ -415,7 +416,8 @@ const styles = StyleSheet.create({
   filterRow: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingTop: 8,
+    paddingBottom: 12,
     backgroundColor: '#FFF',
     gap: 10,
   },
@@ -449,7 +451,7 @@ const styles = StyleSheet.create({
   // 드롭다운
   dropdown: {
     position: 'absolute',
-    top: 185,
+    top: 165,
     left: 20,
     backgroundColor: '#FFF',
     borderRadius: 12,
@@ -464,7 +466,7 @@ const styles = StyleSheet.create({
   },
   dropdownRating: {
     position: 'absolute',
-    top: 185,
+    top: 165,
     right: 20,
     backgroundColor: '#FFF',
     borderRadius: 12,
