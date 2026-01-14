@@ -395,8 +395,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   categoryTab: {
-    paddingHorizontal: 18,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
     borderRadius: 20,
     backgroundColor: '#FFF',
     borderWidth: 1,
