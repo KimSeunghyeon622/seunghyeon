@@ -391,11 +391,11 @@ const styles = StyleSheet.create({
   categoryContent: {
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 5,
+    paddingBottom: 0,
     gap: 24,
   },
   categoryTab: {
-    paddingBottom: 5,
+    paddingBottom: 10,
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',
   },
