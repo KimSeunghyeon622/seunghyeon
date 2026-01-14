@@ -121,36 +121,38 @@ export default function StoreListHome({
         <Text style={styles.logo}>💚 Save It</Text>
       </View>
 
-      {/* 카테고리 탭 */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoryContainer}
-        contentContainerStyle={styles.categoryContent}
-      >
-        {CATEGORIES.map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[
-              styles.categoryTab,
-              selectedCategory === category && styles.categoryTabActive,
-            ]}
-            onPress={() => setSelectedCategory(category)}
-          >
-            <Text
+      {/* 카테고리 + 필터 통합 컨테이너 */}
+      <View style={styles.filterContainer}>
+        {/* 카테고리 탭 */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoryScrollView}
+          contentContainerStyle={styles.categoryContent}
+        >
+          {CATEGORIES.map((category) => (
+            <TouchableOpacity
+              key={category}
               style={[
-                styles.categoryText,
-                selectedCategory === category && styles.categoryTextActive,
+                styles.categoryTab,
+                selectedCategory === category && styles.categoryTabActive,
               ]}
+              onPress={() => setSelectedCategory(category)}
             >
-              {category}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+              <Text
+                style={[
+                  styles.categoryText,
+                  selectedCategory === category && styles.categoryTextActive,
+                ]}
+              >
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
-      {/* 필터 버튼 */}
-      <View style={styles.filterRow}>
+        {/* 필터 버튼 */}
+        <View style={styles.filterRow}>
         <TouchableOpacity
           style={styles.filterButton}
           onPress={() => setShowSortDropdown(!showSortDropdown)}
@@ -173,6 +175,7 @@ export default function StoreListHome({
             ⭐ {selectedRating ? `★ ${selectedRating}` : '전체'}
           </Text>
         </TouchableOpacity>
+      </View>
       </View>
 
       {/* 정렬 드롭다운 */}
@@ -382,14 +385,21 @@ const styles = StyleSheet.create({
     color: '#333',
   },
 
-  // 카테고리 탭
-  categoryContainer: {
+  // 카테고리 + 필터 통합 컨테이너
+  filterContainer: {
     backgroundColor: '#FFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+
+  // 카테고리 탭
+  categoryScrollView: {
+    flexGrow: 0,
   },
   categoryContent: {
     paddingHorizontal: 20,
     paddingTop: 12,
-    paddingBottom: 0,
+    paddingBottom: 12,
     gap: 8,
   },
   categoryTab: {
@@ -420,9 +430,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 0,
     paddingBottom: 12,
-    backgroundColor: '#FFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
     gap: 10,
   },
   filterButton: {
