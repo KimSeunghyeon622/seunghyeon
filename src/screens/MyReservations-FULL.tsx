@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Clipboard } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Clipboard, Modal, TextInput, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 
 interface MyReservationsFullProps {
@@ -10,6 +10,9 @@ interface MyReservationsFullProps {
 export default function MyReservationsFull({ onBack, onWriteReview }: MyReservationsFullProps) {
   const [loading, setLoading] = useState(true);
   const [reservations, setReservations] = useState<any[]>([]);
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
+  const [selectedReservationId, setSelectedReservationId] = useState<string | null>(null);
+  const [cancelReason, setCancelReason] = useState('');
 
   useEffect(() => {
     fetchReservations();
@@ -61,6 +64,40 @@ export default function MyReservationsFull({ onBack, onWriteReview }: MyReservat
   const copyAddress = (address: string) => {
     Clipboard.setString(address);
     alert('주소가 복사되었습니다.');
+  };
+
+  const openCancelModal = (reservationId: string) => {
+    setSelectedReservationId(reservationId);
+    setCancelModalVisible(true);
+  };
+
+  const handleCancelReservation = async () => {
+    if (!selectedReservationId) return;
+    if (!cancelReason.trim()) {
+      Alert.alert('알림', '취소 사유를 입력해주세요.');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('reservations')
+        .update({
+          status: 'cancelled_by_consumer',
+          cancel_reason: cancelReason.trim()
+        })
+        .eq('id', selectedReservationId);
+
+      if (error) throw error;
+
+      Alert.alert('완료', '예약이 취소되었습니다.');
+      setCancelModalVisible(false);
+      setCancelReason('');
+      setSelectedReservationId(null);
+      fetchReservations(); // 목록 새로고침
+    } catch (error) {
+      console.error('예약 취소 오류:', error);
+      Alert.alert('오류', '예약 취소에 실패했습니다.');
+    }
   };
 
   if (loading) {
@@ -146,7 +183,10 @@ export default function MyReservationsFull({ onBack, onWriteReview }: MyReservat
               </View>
 
               <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.cancelButton}>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={() => openCancelModal(reservation.id)}
+                >
                   <Text style={styles.cancelButtonText}>예약 취소</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -161,6 +201,50 @@ export default function MyReservationsFull({ onBack, onWriteReview }: MyReservat
         )}
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      {/* 취소 모달 */}
+      <Modal
+        visible={cancelModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setCancelModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>예약 취소</Text>
+            <Text style={styles.modalSubtitle}>취소 사유를 입력해주세요</Text>
+
+            <TextInput
+              style={styles.modalInput}
+              placeholder="예: 일정이 변경되어서, 다른 곳 예약함 등"
+              placeholderTextColor="#999"
+              value={cancelReason}
+              onChangeText={setCancelReason}
+              multiline
+              numberOfLines={3}
+            />
+
+            <View style={styles.modalButtonRow}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonCancel]}
+                onPress={() => {
+                  setCancelModalVisible(false);
+                  setCancelReason('');
+                  setSelectedReservationId(null);
+                }}
+              >
+                <Text style={styles.modalButtonTextCancel}>닫기</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonConfirm]}
+                onPress={handleCancelReservation}
+              >
+                <Text style={styles.modalButtonTextConfirm}>취소하기</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -208,4 +292,16 @@ const styles = StyleSheet.create({
   cancelButtonText: { fontSize: 14, fontWeight: '600', color: '#666' },
   completeButton: { flex: 1, paddingVertical: 12, borderRadius: 8, backgroundColor: '#00D563', alignItems: 'center' },
   completeButtonText: { fontSize: 14, fontWeight: '600', color: '#FFF' },
+  // 모달 스타일
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center', padding: 20 },
+  modalContainer: { backgroundColor: '#FFF', borderRadius: 16, padding: 24, width: '100%', maxWidth: 400 },
+  modalTitle: { fontSize: 20, fontWeight: 'bold', color: '#333', marginBottom: 8 },
+  modalSubtitle: { fontSize: 14, color: '#666', marginBottom: 20 },
+  modalInput: { borderWidth: 1, borderColor: '#E0E0E0', borderRadius: 8, padding: 12, fontSize: 14, color: '#333', minHeight: 80, textAlignVertical: 'top', marginBottom: 20 },
+  modalButtonRow: { flexDirection: 'row', gap: 10 },
+  modalButton: { flex: 1, paddingVertical: 14, borderRadius: 8, alignItems: 'center' },
+  modalButtonCancel: { backgroundColor: '#F5F5F5', borderWidth: 1, borderColor: '#E0E0E0' },
+  modalButtonConfirm: { backgroundColor: '#FF6B6B' },
+  modalButtonTextCancel: { fontSize: 14, fontWeight: '600', color: '#666' },
+  modalButtonTextConfirm: { fontSize: 14, fontWeight: '600', color: '#FFF' },
 });

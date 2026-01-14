@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Share } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Share, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 
 interface MyPageScreenProps {
@@ -91,6 +91,34 @@ export default function MyPageScreen({ onViewReservations, onViewStoreManagement
     } catch (error) {
       console.error('공유 오류:', error);
     }
+  };
+
+  const handleFavorites = () => {
+    Alert.alert('관심업체', '관심업체 기능은 곧 출시될 예정입니다.');
+  };
+
+  const handleReviews = () => {
+    Alert.alert('작성한 리뷰', '작성한 리뷰 기능은 곧 출시될 예정입니다.');
+  };
+
+  const handleNotifications = () => {
+    Alert.alert('알림 설정', '알림 설정 기능은 곧 출시될 예정입니다.');
+  };
+
+  const handleFAQ = () => {
+    Alert.alert(
+      '자주 묻는 질문',
+      '1. 예약 취소는 어떻게 하나요?\n→ 예약 내역에서 취소 버튼을 눌러주세요.\n\n2. 환불 정책은?\n→ 각 업체의 환불 정책을 확인해주세요.\n\n3. 픽업 시간을 변경할 수 있나요?\n→ 업체에 직접 전화로 문의해주세요.',
+      [{ text: '확인' }]
+    );
+  };
+
+  const handleCustomerService = () => {
+    Alert.alert(
+      '고객센터',
+      '이메일: support@saveit.com\n전화: 1588-0000\n운영시간: 평일 9시-18시',
+      [{ text: '확인' }]
+    );
   };
 
   const getTimeAgo = (dateString: string) => {
@@ -207,32 +235,32 @@ export default function MyPageScreen({ onViewReservations, onViewStoreManagement
 
         {/* 메뉴 섹션 */}
         <View style={styles.menuSection}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleFavorites}>
             <Text style={styles.menuIcon}>❤️</Text>
             <Text style={styles.menuText}>관심업체</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleReviews}>
             <Text style={styles.menuIcon}>💬</Text>
             <Text style={styles.menuText}>작성한 리뷰</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleNotifications}>
             <Text style={styles.menuIcon}>🔔</Text>
             <Text style={styles.menuText}>알림 설정</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleFAQ}>
             <Text style={styles.menuIcon}>❓</Text>
             <Text style={styles.menuText}>자주 묻는 질문</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuIcon}>❓</Text>
+          <TouchableOpacity style={styles.menuItem} onPress={handleCustomerService}>
+            <Text style={styles.menuIcon}>📞</Text>
             <Text style={styles.menuText}>고객센터</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>

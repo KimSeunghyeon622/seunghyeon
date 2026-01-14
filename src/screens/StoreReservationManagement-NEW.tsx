@@ -70,7 +70,7 @@ export default function StoreReservationManagementNew({ onBack }: StoreReservati
     try {
       const { error } = await supabase
         .from('reservations')
-        .update({ status: 'cancelled', cancel_reason: cancelReason })
+        .update({ status: 'cancelled_by_store', cancel_reason: cancelReason })
         .eq('id', selectedReservation.id);
 
       if (error) throw error;
