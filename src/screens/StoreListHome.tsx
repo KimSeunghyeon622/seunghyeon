@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
   categoryContent: {
     paddingHorizontal: 20,
     paddingTop: 12,
-    paddingBottom: 8,
+    paddingBottom: 0,
     gap: 8,
   },
   categoryTab: {
