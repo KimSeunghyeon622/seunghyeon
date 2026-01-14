@@ -246,8 +246,6 @@ export default function StoreProductManagement({ onBack }: StoreProductManagemen
 
   // 과거 상품 아이템 렌더링
   const renderPastProductItem = ({ item }: { item: PastProduct }) => {
-    const discount = Math.round(((item.original_price - item.discounted_price) / item.original_price) * 100);
-
     return (
       <View style={styles.pastProductItem}>
         <Image
