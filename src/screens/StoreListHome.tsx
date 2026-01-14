@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
   filterRow: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingTop: 0,
     paddingBottom: 12,
     backgroundColor: '#FFF',
     gap: 10,
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
   // 드롭다운
   dropdown: {
     position: 'absolute',
-    top: 165,
+    top: 157,
     left: 20,
     backgroundColor: '#FFF',
     borderRadius: 12,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
   },
   dropdownRating: {
     position: 'absolute',
-    top: 165,
+    top: 157,
     right: 20,
     backgroundColor: '#FFF',
     borderRadius: 12,
