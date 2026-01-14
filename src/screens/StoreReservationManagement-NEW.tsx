@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Modal, TextInput, Alert } from 'react-native';
 import { supabase } from '../lib/supabase';
 
 interface StoreReservationManagementNewProps {
@@ -46,20 +46,35 @@ export default function StoreReservationManagementNew({ onBack }: StoreReservati
     }
   };
 
-  const handlePickupComplete = async (reservationId: string) => {
-    try {
-      const { error } = await supabase
-        .from('reservations')
-        .update({ status: 'completed', picked_up: true, picked_up_at: new Date().toISOString() })
-        .eq('id', reservationId);
+  const handlePickupComplete = (reservationId: string) => {
+    Alert.alert(
+      '픽업 완료 확인',
+      '고객이 상품을 픽업했습니까?\n픽업 완료 처리 후에는 되돌릴 수 없습니다.',
+      [
+        {
+          text: '취소',
+          style: 'cancel'
+        },
+        {
+          text: '픽업 완료',
+          onPress: async () => {
+            try {
+              const { error } = await supabase
+                .from('reservations')
+                .update({ status: 'completed', picked_up: true, picked_up_at: new Date().toISOString() })
+                .eq('id', reservationId);
 
-      if (error) throw error;
-      alert('픽업이 완료되었습니다.');
-      fetchReservations();
-    } catch (error) {
-      console.error('픽업 완료 오류:', error);
-      alert('픽업 완료 처리에 실패했습니다.');
-    }
+              if (error) throw error;
+              Alert.alert('완료', '픽업이 완료되었습니다.');
+              fetchReservations();
+            } catch (error) {
+              console.error('픽업 완료 오류:', error);
+              Alert.alert('오류', '픽업 완료 처리에 실패했습니다.');
+            }
+          }
+        }
+      ]
+    );
   };
 
   const handleCancel = async () => {

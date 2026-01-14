@@ -12,6 +12,7 @@ const QUICK_AMOUNTS = [30000, 50000, 100000];
 export default function StoreCashManagement({ onBack, onViewHistory }: StoreCashManagementProps) {
   const [loading, setLoading] = useState(true);
   const [storeId, setStoreId] = useState('');
+  const [storeName, setStoreName] = useState('');
   const [cashBalance, setCashBalance] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number | null>(50000);
@@ -25,12 +26,13 @@ export default function StoreCashManagement({ onBack, onViewHistory }: StoreCash
 
       const { data, error } = await supabase
         .from('stores')
-        .select('id, cash_balance')
+        .select('id, name, cash_balance')
         .eq('user_id', user.id)
         .single();
 
       if (error) throw error;
       setStoreId(data.id);
+      setStoreName(data.name);
       setCashBalance(data.cash_balance);
       setIsActive(data.cash_balance >= 10000);
     } catch (error) {
@@ -102,7 +104,7 @@ export default function StoreCashManagement({ onBack, onViewHistory }: StoreCash
               <Text style={styles.logoText}>🏪</Text>
             </View>
             <View>
-              <Text style={styles.storeName}>그린베이커리 서울점</Text>
+              <Text style={styles.storeName}>{storeName || '업체명 없음'}</Text>
               <Text style={styles.statusLabel}>영업 상태: {isActive ? '운영 중' : '준비중'}</Text>
             </View>
           </View>
@@ -119,9 +121,6 @@ export default function StoreCashManagement({ onBack, onViewHistory }: StoreCash
         <View style={styles.balanceCard}>
           <Text style={styles.balanceAmount}>{cashBalance.toLocaleString()}원</Text>
           <Text style={styles.balanceLabel}>현재 보유 캐시</Text>
-          <TouchableOpacity style={styles.chargeButton}>
-            <Text style={styles.chargeButtonText}>충전중</Text>
-          </TouchableOpacity>
         </View>
 
         {/* 경고 메시지 */}
@@ -197,7 +196,7 @@ export default function StoreCashManagement({ onBack, onViewHistory }: StoreCash
         <View style={styles.infoBox}>
           <Text style={styles.infoIcon}>ℹ️</Text>
           <Text style={styles.infoText}>
-            예약 완료 시 상품 금액의 15~20%가 캐시에서 수수료로 자감됩니다. 캐시 잔액이 부족할 경우 웹 노중이 중단되오니 충전 금액을 확인해 주세요.
+            예약 완료 시 상품 금액의 15%가 캐시에서 수수료로 차감됩니다. 캐시 잔액이 부족할 경우 예약 접수가 중단되오니 충전 금액을 확인해 주세요.
           </Text>
         </View>
 
