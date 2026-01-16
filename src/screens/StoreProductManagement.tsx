@@ -39,6 +39,7 @@ export default function StoreProductManagement({ onBack }: StoreProductManagemen
   const [productImage, setProductImage] = useState<any>(null);
   const [productImageUrl, setProductImageUrl] = useState<string | null>(null);
   const [productName, setProductName] = useState('');
+  const [productCategory, setProductCategory] = useState('빵');
   const [originalPrice, setOriginalPrice] = useState('');
   const [discountedPrice, setDiscountedPrice] = useState('');
   const [stockQuantity, setStockQuantity] = useState(5);
@@ -170,6 +171,7 @@ export default function StoreProductManagement({ onBack }: StoreProductManagemen
       const { error } = await supabase.from('products').insert({
         store_id: storeId,
         name: productName,
+        category: productCategory,
         original_price: parseFloat(originalPrice),
         discounted_price: parseFloat(discountedPrice),
         stock_quantity: stockQuantity,
@@ -188,6 +190,7 @@ export default function StoreProductManagement({ onBack }: StoreProductManagemen
       setProductImage(null);
       setProductImageUrl(null);
       setProductName('');
+      setProductCategory('빵');
       setOriginalPrice('');
       setDiscountedPrice('');
       setStockQuantity(5);
@@ -296,7 +299,7 @@ export default function StoreProductManagement({ onBack }: StoreProductManagemen
         <Text style={styles.sectionTitle}>기본 정보</Text>
 
         {/* 상품 사진 추가 */}
-        <Text style={styles.label}>상품명</Text>
+        <Text style={styles.label}>상품 사진</Text>
         <TouchableOpacity style={styles.imageUploadBox} onPress={pickProductImage}>
           {productImage ? (
             <Image
@@ -318,6 +321,7 @@ export default function StoreProductManagement({ onBack }: StoreProductManagemen
           )}
         </TouchableOpacity>
 
+        <Text style={styles.label}>상품명 *</Text>
         <TextInput
           style={styles.input}
           value={productName}
@@ -325,6 +329,29 @@ export default function StoreProductManagement({ onBack }: StoreProductManagemen
           placeholder="예: 유기농 딸기"
           placeholderTextColor="#999"
         />
+
+        <Text style={styles.label}>카테고리 *</Text>
+        <View style={styles.categoryContainer}>
+          {['빵', '도시락', '음료', '반찬', '과일', '기타'].map((cat) => (
+            <TouchableOpacity
+              key={cat}
+              style={[
+                styles.categoryButton,
+                productCategory === cat && styles.categoryButtonActive,
+              ]}
+              onPress={() => setProductCategory(cat)}
+            >
+              <Text
+                style={[
+                  styles.categoryText,
+                  productCategory === cat && styles.categoryTextActive,
+                ]}
+              >
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         {/* 가격 및 재고 */}
         <Text style={styles.sectionTitle}>가격 및 재고</Text>
@@ -876,5 +903,34 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     color: '#999',
+  },
+
+  // 카테고리 선택
+  categoryContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginBottom: 15,
+  },
+  categoryButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  categoryButtonActive: {
+    backgroundColor: '#00D563',
+    borderColor: '#00D563',
+  },
+  categoryText: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
+  },
+  categoryTextActive: {
+    color: '#FFF',
+    fontWeight: '600',
   },
 });
