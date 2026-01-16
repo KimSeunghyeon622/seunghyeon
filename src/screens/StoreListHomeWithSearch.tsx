@@ -373,7 +373,7 @@ export default function StoreListHomeWithSearch({
       {searchQuery.trim().length > 0 && (
         <View style={styles.searchResultInfo}>
           <Text style={styles.searchResultText}>
-            '{searchQuery}' 검색 결과: {filteredStores.length}개
+            &apos;{searchQuery}&apos; 검색 결과: {filteredStores.length}개
           </Text>
         </View>
       )}

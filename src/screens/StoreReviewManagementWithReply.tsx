@@ -87,7 +87,7 @@ export default function StoreReviewManagementWithReply({ onBack }: StoreReviewMa
         const id = await fetchStoreId();
         setStoreId(id);
         await fetchReviews(id);
-      } catch (error) {
+      } catch {
         Alert.alert('오류', '리뷰를 불러오는데 실패했습니다.');
       }
     };
