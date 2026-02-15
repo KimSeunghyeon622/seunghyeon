@@ -1,4 +1,4 @@
-﻿import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import {
   Image,
   Pressable,
@@ -11,15 +11,15 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 
-// 移댁뭅?ㅻ㏊ REST API ??(?섏쨷???ㅼ젣 ?ㅻ줈 援먯껜 ?덉젙)
+// 카카오맵 REST API 키 (나중에 실제 키로 교체 예정)
 const KAKAO_REST_API_KEY =
-  process.env.EXPO_PUBLIC_KAKAO_REST_API_KEY ?? '';
+  process.env.EXPO_PUBLIC_KAKAO_REST_API_KEY ?? '48e00df541befd01450bb442c0c9bdca';
 
-// 移댁뭅??Static Map API 理쒕? ?대?吏 ?ш린
+// 카카오 Static Map API 최대 이미지 크기
 const MAX_IMAGE_SIZE = 800;
 
-// 移댁뭅??吏???덈꺼蹂?誘명꽣/?쎌? 鍮꾩쑉 (洹쇱궗媛?
-// level 1 = 媛???뺣?, level 14 = 媛??異뺤냼
+// 카카오 지도 레벨별 미터/픽셀 비율 (근사값)
+// level 1 = 가장 확대, level 14 = 가장 축소
 const METERS_PER_PIXEL_BY_LEVEL: Record<number, number> = {
   1: 0.5,
   2: 1,
@@ -50,15 +50,15 @@ interface KakaoStaticMapProps {
   onSelect?: (id: string) => void;
   onBackgroundPress?: () => void;
   style?: StyleProp<ViewStyle>;
-  initialZoomLevel?: number; // 移댁뭅???덈꺼 1-14 (?묒쓣?섎줉 ?뺣?)
+  initialZoomLevel?: number; // 카카오 레벨 1-14 (작을수록 확대)
 }
 
 /**
- * ?꾨룄/寃쎈룄瑜?誘명꽣 ?⑥쐞濡?蹂?섑븯???좏떥由ы떚 ?⑥닔
- * (吏援???먯껜 洹쇱궗)
+ * 위도/경도를 미터 단위로 변환하는 유틸리티 함수
+ * (지구 타원체 근사)
  */
 const latLngToMeters = (lat: number, lng: number) => {
-  const earthRadius = 6378137; // 誘명꽣
+  const earthRadius = 6378137; // 미터
   const latRad = (lat * Math.PI) / 180;
   const lngRad = (lng * Math.PI) / 180;
   const x = earthRadius * lngRad * Math.cos(latRad);
@@ -67,7 +67,7 @@ const latLngToMeters = (lat: number, lng: number) => {
 };
 
 /**
- * 移댁뭅??Static Map URL ?앹꽦 ?⑥닔
+ * 카카오 Static Map URL 생성 함수
  */
 const getStaticMapUrl = (
   centerLat: number,
@@ -76,7 +76,7 @@ const getStaticMapUrl = (
   width: number,
   height: number
 ): string => {
-  // 移댁뭅??API??center瑜?"lng,lat" ?쒖꽌濡?諛쏆쓬
+  // 카카오 API는 center를 "lng,lat" 순서로 받음
   const safeWidth = Math.min(Math.max(Math.round(width), 1), MAX_IMAGE_SIZE);
   const safeHeight = Math.min(Math.max(Math.round(height), 1), MAX_IMAGE_SIZE);
   const safeLevel = Math.min(Math.max(Math.round(level), 1), 14);
@@ -85,9 +85,9 @@ const getStaticMapUrl = (
 };
 
 /**
- * 移댁뭅??Static Map API瑜??ъ슜?섏뿬 吏???대?吏瑜??쒖떆?섎뒗 而댄룷?뚰듃
- * - WebView ?놁씠 ?⑥닚 Image 而댄룷?뚰듃 ?ъ슜
- * - 留덉빱???ㅻ쾭?덉씠濡??쒖떆
+ * 카카오 Static Map API를 사용하여 지도 이미지를 표시하는 컴포넌트
+ * - WebView 없이 단순 Image 컴포넌트 사용
+ * - 마커는 오버레이로 표시
  */
 export default function KakaoStaticMap({
   markers,
@@ -101,16 +101,16 @@ export default function KakaoStaticMap({
   const [zoomLevel, setZoomLevel] = useState(initialZoomLevel);
   const [imageError, setImageError] = useState(false);
 
-  // ?덉씠?꾩썐 蹂寃??몃뱾??
+  // 레이아웃 변경 핸들러
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
     setLayout({ width, height });
   }, []);
 
-  // 留덉빱 以묒떖??怨꾩궛
+  // 마커 중심점 계산
   const center = useMemo(() => {
     if (markers.length === 0) {
-      // 湲곕낯 ?꾩튂: ?쒖슱 ?쒖껌
+      // 기본 위치: 서울 시청
       return { lat: 37.5665, lng: 126.978 };
     }
 
@@ -129,7 +129,7 @@ export default function KakaoStaticMap({
     };
   }, [markers, selectedId]);
 
-  // Static Map URL ?앹꽦
+  // Static Map URL 생성
   const staticMapUrl = useMemo(() => {
     if (layout.width === 0 || layout.height === 0) {
       return null;
@@ -137,7 +137,7 @@ export default function KakaoStaticMap({
     return getStaticMapUrl(center.lat, center.lng, zoomLevel, layout.width, layout.height);
   }, [center, zoomLevel, layout]);
 
-  // 留덉빱 ?쎌? ?꾩튂 怨꾩궛
+  // 마커 픽셀 위치 계산
   const getMarkerPosition = useCallback(
     (lat: number, lng: number): { left: number; top: number } => {
       if (layout.width === 0 || layout.height === 0) {
@@ -146,20 +146,20 @@ export default function KakaoStaticMap({
 
       const metersPerPixel = METERS_PER_PIXEL_BY_LEVEL[zoomLevel] || 8;
 
-      // 以묒떖?먭낵 留덉빱??誘명꽣 ?⑥쐞 醫뚰몴 怨꾩궛
+      // 중심점과 마커의 미터 단위 좌표 계산
       const centerMeters = latLngToMeters(center.lat, center.lng);
       const markerMeters = latLngToMeters(lat, lng);
 
-      // 以묒떖?먯쑝濡쒕??곗쓽 誘명꽣 ?⑥쐞 ?ㅽ봽??
+      // 중심점으로부터의 미터 단위 오프셋
       const dxMeters = markerMeters.x - centerMeters.x;
       const dyMeters = markerMeters.y - centerMeters.y;
 
-      // ?쎌? ?ㅽ봽??怨꾩궛
+      // 픽셀 오프셋 계산
       const dxPixels = dxMeters / metersPerPixel;
       const dyPixels = dyMeters / metersPerPixel;
 
-      // ?대?吏 以묒떖 湲곗? 醫뚰몴
-      // y異뺤? ?꾨룄媛 ?믪쓣?섎줉 ?꾨줈 媛誘濡?dy瑜?鍮쇱쨲
+      // 이미지 중심 기준 좌표
+      // y축은 위도가 높을수록 위로 가므로 dy를 빼줌
       const left = layout.width / 2 + dxPixels;
       const top = layout.height / 2 - dyPixels;
 
@@ -168,29 +168,29 @@ export default function KakaoStaticMap({
     [center, zoomLevel, layout]
   );
 
-  // 以????몃뱾??
+  // 줌 인 핸들러
   const handleZoomIn = useCallback(() => {
     setZoomLevel((prev) => Math.max(1, prev - 1));
   }, []);
 
-  // 以??꾩썐 ?몃뱾??
+  // 줌 아웃 핸들러
   const handleZoomOut = useCallback(() => {
     setZoomLevel((prev) => Math.min(14, prev + 1));
   }, []);
 
-  // ?대?吏 濡쒕뱶 ?먮윭 ?몃뱾??
+  // 이미지 로드 에러 핸들러
   const handleImageError = useCallback(() => {
     setImageError(true);
   }, []);
 
-  // 諛곌꼍 ?곗튂 ?몃뱾??
+  // 배경 터치 핸들러
   const handleBackgroundPress = useCallback(() => {
     onBackgroundPress?.();
   }, [onBackgroundPress]);
 
   return (
     <View style={[styles.container, style]} onLayout={handleLayout}>
-      {/* Static Map 諛곌꼍 ?대?吏 */}
+      {/* Static Map 배경 이미지 */}
       {staticMapUrl && !imageError && (
         <Image
           source={{ uri: staticMapUrl }}
@@ -200,24 +200,24 @@ export default function KakaoStaticMap({
         />
       )}
 
-      {/* ?대?吏 濡쒕뱶 ?ㅽ뙣 ?먮뒗 濡쒕뵫 以??뚮젅?댁뒪???*/}
+      {/* 이미지 로드 실패 또는 로딩 중 플레이스홀더 */}
       {(!staticMapUrl || imageError) && (
         <View style={styles.placeholder}>
           <Text style={styles.placeholderText}>
-            {imageError ? '吏?꾨? 遺덈윭?????놁뒿?덈떎' : '吏??濡쒕뵫 以?..'}
+            {imageError ? '지도를 불러올 수 없습니다' : '지도 로딩 중...'}
           </Text>
         </View>
       )}
 
-      {/* 諛곌꼍 ?곗튂 ?곸뿭 */}
+      {/* 배경 터치 영역 */}
       <Pressable style={styles.touchArea} onPress={handleBackgroundPress} />
 
-      {/* 留덉빱 ?ㅻ쾭?덉씠 */}
+      {/* 마커 오버레이 */}
       {markers.map((marker) => {
         const pos = getMarkerPosition(marker.latitude, marker.longitude);
         const isSelected = selectedId === marker.id;
 
-        // ?붾㈃ 諛뽰쓽 留덉빱???뚮뜑留곹븯吏 ?딆쓬
+        // 화면 밖의 마커는 렌더링하지 않음
         if (
           pos.left < -13 ||
           pos.left > layout.width + 13 ||
@@ -238,12 +238,12 @@ export default function KakaoStaticMap({
             onPress={() => onSelect?.(marker.id)}
             activeOpacity={0.85}
           >
-            <Text style={[styles.markerDot, isSelected && styles.markerDotSelected]}>??/Text>
+            <Text style={[styles.markerDot, isSelected && styles.markerDotSelected]}>●</Text>
           </TouchableOpacity>
         );
       })}
 
-      {/* 以?而⑦듃濡?*/}
+      {/* 줌 컨트롤 */}
       <View style={styles.zoomControls}>
         <TouchableOpacity style={styles.zoomButton} onPress={handleZoomIn}>
           <Text style={styles.zoomButtonText}>+</Text>
@@ -253,7 +253,7 @@ export default function KakaoStaticMap({
         </TouchableOpacity>
       </View>
 
-      {/* ?꾩옱 以??덈꺼 ?쒖떆 (?붾쾭洹몄슜, ?꾩슂???쒓굅) */}
+      {/* 현재 줌 레벨 표시 (디버그용, 필요시 제거) */}
       {__DEV__ && (
         <View style={styles.debugInfo}>
           <Text style={styles.debugText}>Level: {zoomLevel}</Text>
@@ -357,4 +357,3 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 });
-

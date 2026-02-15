@@ -1,4 +1,4 @@
-﻿{
+{
   "expo": {
     "name": "myapp",
     "slug": "myapp",
@@ -61,7 +61,7 @@
       [
         "@react-native-kakao/core",
         {
-          "nativeAppKey": "YOUR_KAKAO_NATIVE_APP_KEY"
+          "nativeAppKey": "394c4f3567dec9a3921cd45567fad59a"
         }
       ]
     ],
@@ -79,4 +79,3 @@
     "newArchEnabled": true
   }
 }
-
