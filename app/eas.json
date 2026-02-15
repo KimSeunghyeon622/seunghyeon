@@ -1,0 +1,36 @@
+{
+  "cli": {
+    "version": ">= 16.28.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EX_DEV_CLIENT_NETWORK_INSPECTOR": "true"
+      },
+      "android": {
+        "gradleCommand": ":app:assembleDebug --stacktrace --info"
+      }
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "ios_testflight": {
+      "distribution": "store",
+      "autoIncrement": true
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "ios_testflight": {
+      "ios": {
+        "ascAppId": "6759194471"
+      }
+    },
+    "production": {}
+  }
+}

@@ -1,0 +1,15 @@
+# 기능 구현 계획서 폴더
+
+이 폴더는 TDD 기반 기능 구현 계획서를 저장합니다.
+
+## 파일 명명 규칙
+- `PLAN_<feature-name>.md`
+- 예: `PLAN_user-authentication.md`, `PLAN_payment-flow.md`
+
+## 계획서 작성 시점
+- 새로운 기능 구현 시작 전
+- Medium/Large 규모 리팩토링 전
+- 복잡한 버그 수정 전
+
+## 참고
+- 계획서 템플릿: `.claude/agents/tdd-agent.md`의 "기능 구현 계획 템플릿" 섹션 참조

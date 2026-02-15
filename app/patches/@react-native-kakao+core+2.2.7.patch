@@ -1,0 +1,16 @@
+diff --git a/node_modules/@react-native-kakao/core/android/src/main/java/net/mjstudio/rnkakao/core/util/RNCKakaoUtil.kt b/node_modules/@react-native-kakao/core/android/src/main/java/net/mjstudio/rnkakao/core/util/RNCKakaoUtil.kt
+index b1f42f8..66c0137 100644
+--- a/node_modules/@react-native-kakao/core/android/src/main/java/net/mjstudio/rnkakao/core/util/RNCKakaoUtil.kt
++++ b/node_modules/@react-native-kakao/core/android/src/main/java/net/mjstudio/rnkakao/core/util/RNCKakaoUtil.kt
+@@ -77,8 +77,9 @@ fun ReadableArray.filterIsReadableMap(): List<ReadableMap> {
+   val ret = mutableListOf<ReadableMap>()
+   for (i in 0 until this.size()) {
+     if (getType(i) == ReadableType.Map) {
+-      ret.add(getMap(i))
+-    }
++  val m = getMap(i)
++  if (m != null) ret.add(m)
++}
+   }
+   return ret
+ }
